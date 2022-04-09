@@ -5,7 +5,7 @@ This bash script will install LEMP stack on your Ubuntu and configure it to maxi
 ## Features
 * All-in-one one "click" installation of the [LEMP](https://en.wikipedia.org/wiki/LAMP_(software_bundle)) environment
 * [Nginx](https://launchpad.net/~hda-me/+archive/ubuntu/nginx-stable) will be installed with the ability to dynamically load or disable any preloaded module
-* [Backup](https://gist.github.com/sutlxwhx/717efdfadd8052d456c2e4da16b0163b) will be created for your current Nginx, PHP and MySQL / MariaDB installations
+* [Backup](https://gist.github.com/tarikmanoar/717efdfadd8052d456c2e4da16b0163b) will be created for your current Nginx, PHP and MySQL / MariaDB installations
 * Some core settings of [Nginx](https://nginx.org/en/docs/http/ngx_http_core_module.html) and [MariaDB](https://mariadb.com/kb/en/library/server-system-variables/) that are often underestimated are configured properly
 * [OPcache](http://php.net/manual/en/book.opcache.php) is enabled and configured for PHP-FPM 
 * [Monit](https://mmonit.com/monit/) will be configured to watch after SSH, Nginx, PHP and MySQL / MariaDB and restart them in case of an emergency
@@ -23,11 +23,11 @@ Every command is well commented so you will know what  happens after each line o
 
 To download and run this script in a single command use the line below:
 ```shell
-wget https://raw.githubusercontent.com/sutlxwhx/Highload-LEMP-Installation/master/install.sh && bash install.sh
+wget https://raw.githubusercontent.com/tarikmanoar/lemp-bash/master/install.sh && bash install.sh
 ```
 Or download install.sh manually, make it executable and run it:
 ```shell
-wget https://raw.githubusercontent.com/sutlxwhx/Highload-LEMP-Installation/master/install.sh
+wget https://raw.githubusercontent.com/tarikmanoar/lemp-bash/master/install.sh
 chmod +x install.sh
 ./install.sh
 ```
