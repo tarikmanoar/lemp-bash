@@ -1,27 +1,33 @@
 #!/usr/bin/env bash
 #
-# Follow up commands are best suitable for clean Ubuntu 16.04 installation
+# Follow up commands are best suitable for clean Ubuntu 20.0.0 installation
 # All commands are executed by the root user
 # Nginx library is installed from custom ppa/ repository
 # https://launchpad.net/~hda-me/+archive/ubuntu/nginx-stable
 # This will not be available for any other OS rather then Ubuntu
 #
+#
+#Setting Up Firewall
+ufw app list
+ufw allow OpenSSH
+ufw enable
+ufw status
 # Disable user promt
 DEBIAN_FRONTEND=noninteractive
 # Update list of available packages
 apt-get update -y -q
-# Update installed packages
-apt-get DPkg::options::="--force-confdef" -o DPkg::options::="--force-confold" dist-upgrade -y -q
 # Install the most common packages that will be usefull under development environment
 apt-get install zip unzip fail2ban htop sqlite3 nload mlocate nano memcached python-software-properties software-properties-common -y -q
 # Install Nginx && PHP-FPM stack
 echo "Installing Nginx && PHP-FPM stack"
 echo "Please enter PHP version number (7.4 or 8.0):"
 read php_v
-if [ $php_v -eq 7 ]; then 
-    apt-get install php$php_v-{cli,fpm,common,mysql,zip,gd,mbstring,curl,xml,bcmath,sqlite3,pgsql,gd,gmp,imap,intl,imagick,tokenizer} -y -q
+if [ $php_v -eq 7.4 ]; then 
+    apt-get install php-{cli,fpm,common,mysql,zip,gd,mbstring,curl,xml,bcmath,sqlite3,pgsql,gd,gmp,imap,intl,imagick,tokenizer} -y -q
     #apt-get install php7.4-curl php7.4-fpm php7.4-gd php7.4-mbstring php7.4-mcrypt php7.4-opcache php7.4-xml php7.4-sqlite php7.4-mysql php-imagick -y -q
 else
+    apt install software-properties-common -y -q
+    add-apt-repository ppa:ondrej/php -y -q
     apt-get install php$php_v-{cli,fpm,common,mysql,zip,gd,mbstring,curl,xml,bcmath,sqlite3,pgsql,gd,gmp,imap,intl,imagick,tokenizer} -y -q
 fi
 # Create a folder to backup current installation of Nginx && PHP-FPM
@@ -37,13 +43,24 @@ cp -r /etc/mysql/ /backup/$now/mysql/
 # Delete previous Nginx installation
 apt-get purge nginx-core nginx-common nginx -y -q
 apt-get autoremove -y -q
-# Add custom repository for Nginx
-apt-add-repository ppa:hda-me/nginx-stable -y
 # Update list of available packages
 apt-get update -y -q
+
+# Installing Composer 
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('sha384', 'composer-setup.php') === '756890a4488ce9024fc62c56153228907f1545c228516cbf63f885e036d37e9a59d27d63f46af1d4d07ee0f76181c7d3') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+mv composer.phar /usr/local/bin/composer
+
+# Update list of available packages
+apt-get update -y -q
+
 # Install custom Nginx package
 apt-get install nginx -y -q
+ufw allow 'Nginx HTTP'
 systemctl unmask nginx.service
+systemctl status php$php_v-fpm nginx
 # Install Brottli package for Nginx
 # https://blog.cloudflare.com/results-experimenting-brotli/
 apt-get install nginx-module-brotli -y -q
@@ -82,7 +99,7 @@ password=$(hostname | md5sum | awk '{print $1}')
 debconf-set-selections <<< "mariadb-server-10.2 mysql-server/root_password password $password"
 debconf-set-selections <<< "mariadb-server-10.2 mysql-server/root_password_again password $password"
 # Install MariaDB package
-apt-get install mariadb-server -y -q
+apt-get install mariadb-server -y -q --fix-missing
 # Add custom configuration for your Mysql
 # All modified variables are available at https://mariadb.com/kb/en/library/server-system-variables/
 echo -e "\n[mysqld]\nmax_connections=24\nconnect_timeout=10\nwait_timeout=10\nthread_cache_size=24\nsort_buffer_size=1M\njoin_buffer_size=1M\ntmp_table_size=8M\nmax_heap_table_size=1M\nbinlog_cache_size=8M\nbinlog_stmt_cache_size=8M\nkey_buffer_size=1M\ntable_open_cache=64\nread_buffer_size=1M\nquery_cache_limit=1M\nquery_cache_size=8M\nquery_cache_type=1\ninnodb_buffer_pool_size=8M\ninnodb_open_files=1024\ninnodb_io_capacity=1024\ninnodb_buffer_pool_instances=1" >> /etc/mysql/my.cnf
