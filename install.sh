@@ -19,6 +19,9 @@ apt-get update -y -q
 # Install the most common packages that will be usefull under development environment
 apt-get install zip unzip fail2ban htop sqlite3 nload mlocate nano memcached python-software-properties software-properties-common -y -q
 # Install Nginx && PHP-FPM stack
+apt update
+apt install lsb-release ca-certificates apt-transport-https software-properties-common -y
+add-apt-repository ppa:ondrej/php
 echo "Installing Nginx && PHP-FPM stack"
 echo "Please enter PHP version number (7.4 or 8.0):"
 read php_v
