@@ -60,7 +60,7 @@ apt-get update -y -q
 apt-get install nginx -y -q
 ufw allow 'Nginx HTTP'
 systemctl unmask nginx.service
-systemctl status php$php_v-fpm nginx
+# systemctl status php$php_v-fpm nginx
 # Install Brottli package for Nginx
 # https://blog.cloudflare.com/results-experimenting-brotli/
 apt-get install nginx-module-brotli -y -q
