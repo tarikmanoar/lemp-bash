@@ -23,16 +23,9 @@ apt update
 apt install lsb-release ca-certificates apt-transport-https software-properties-common -y
 add-apt-repository ppa:ondrej/php
 #Installing Nginx && PHP-FPM stack
-echo "Please enter PHP version number (7.4 or 8.0):"
-read php_v
-if [ $php_v -eq 7.4 ]; then 
-    apt-get install php-{cli,fpm,common,mysql,zip,gd,mbstring,curl,xml,bcmath,sqlite3,pgsql,gd,gmp,imap,intl,imagick,tokenizer} -y -q
-    #apt-get install php7.4-curl php7.4-fpm php7.4-gd php7.4-mbstring php7.4-mcrypt php7.4-opcache php7.4-xml php7.4-sqlite php7.4-mysql php-imagick -y -q
-else
-    apt install software-properties-common -y -q
-    add-apt-repository ppa:ondrej/php -y -q
-    apt-get install php$php_v-{cli,fpm,common,mysql,zip,gd,mbstring,curl,xml,bcmath,sqlite3,pgsql,gd,gmp,imap,intl,imagick,tokenizer} -y -q
-fi
+apt install software-properties-common -y -q
+add-apt-repository ppa:ondrej/php -y -q
+apt-get install php8.1-{cli,fpm,common,mysql,zip,gd,mbstring,curl,xml,bcmath,sqlite3,pgsql,gd,gmp,imap,intl,imagick,tokenizer} -y -q
 # Delete previous Nginx installation
 apt-get purge nginx-core nginx-common nginx -y -q
 apt-get autoremove -y -q
@@ -53,7 +46,7 @@ apt-get update -y -q
 # Install custom Nginx package
 apt-get install nginx -y -q
 ufw allow 'Nginx HTTP'
-# systemctl status php$php_v-fpm nginx
+# systemctl status php8.1-fpm nginx
 # Create an additional configuration folder for Nginx
 mkdir /etc/nginx/conf.d
 # Download list of bad bots, bad ip's and bad referres
@@ -111,4 +104,4 @@ chown -R www-data:www-data /var/www/*
 echo -e "*       soft    nofile  1000000" >> /etc/security/limits.conf
 echo -e "*       hard    nofile  1000000" >> /etc/security/limits.conf
 # Switch to the ondemand state of PHP-FPM
-sed -i "s/^pm = .*/pm = ondemand/" /etc/php/$php_v/fpm/pool.d/www.conf
+sed -i "s/^pm = .*/pm = ondemand/" /etc/php/8.1/fpm/pool.d/www.conf
