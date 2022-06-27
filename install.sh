@@ -19,12 +19,10 @@ apt-get update -y -q
 # Install the most common packages that will be usefull under development environment
 apt-get install zip unzip fail2ban htop sqlite3 nload mlocate nano memcached  software-properties-common -y -q
 # Install Nginx && PHP-FPM stack
-apt update
+apt update -y -q
 apt install lsb-release ca-certificates apt-transport-https software-properties-common -y
 add-apt-repository ppa:ondrej/php
 #Installing Nginx && PHP-FPM stack
-apt install software-properties-common -y -q
-add-apt-repository ppa:ondrej/php -y -q
 apt-get install php8.1-{cli,fpm,common,mysql,zip,gd,mbstring,curl,xml,bcmath,sqlite3,pgsql,gd,gmp,imap,intl,imagick,tokenizer} -y -q
 # Delete previous Nginx installation
 apt-get purge nginx-core nginx-common nginx -y -q
@@ -35,7 +33,7 @@ apt-get update -y -q
 # Installing Composer 
 echo "======================COMPOSER=========================="
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-php -r "if (hash_file('sha384', 'composer-setup.php') === '756890a4488ce9024fc62c56153228907f1545c228516cbf63f885e036d37e9a59d27d63f46af1d4d07ee0f76181c7d3') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php -r "if (hash_file('sha384', 'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
 php composer-setup.php
 php -r "unlink('composer-setup.php');"
 mv composer.phar /usr/local/bin/composer
